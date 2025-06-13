@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="VAT Rounding Guide with Professional Validation - How to handle rounding differences in VAT calculations and validate against professional invoice formula: Net = (Quantity × Unit Price ÷ Base Quantity) + Charges - Allowances">
+    <title>VAT Rounding Adjustment Guide with Professional Validation</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #2c3e50;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+
+        .problem-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .solution-box {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .step-box {
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .calculation-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .calculation-table th,
+        .calculation-table td {
+            border: 1px solid #dee2e6;
+            padding: 12px;
+            text-align: right;
+        }
+
+        .calculation-table th {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+
+        .total-row {
+            background: #e9ecef;
+            font-weight: bold;
+        }
+
+        .difference-row {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .corrected-row {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .formula {
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+
+        .steps-list {
+            counter-reset: step-counter;
+            list-style: none;
+            padding: 0;
+        }
+
+        .steps-list li {
+            counter-increment: step-counter;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+            position: relative;
+        }
+
+        .steps-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: -15px;
+            top: 20px;
+            background: #007bff;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .interactive-demo {
+            background: #e8f5e8;
+            border: 2px solid #28a745;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .demo-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .input-group label {
+            font-weight: bold;
+            color: #495057;
+        }
+
+        .input-group input {
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s;
+            margin: 10px 5px;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .success {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .key-points {
+            background: #e9ecef;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .key-points ul {
+            margin-left: 20px;
+        }
+
+        .key-points li {
+            margin: 10px 0;
+        }
+
+        .product-details {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .validation-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .validation-success {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            color: #155724;
+        }
+
+        .validation-error {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+            color: #721c24;
+        }
+
+        .formula-line {
+            font-family: 'Courier New', monospace;
+            background: #f8f9fa;
+            padding: 8px;
+            border-radius: 4px;
+            margin: 5px 0;
+            font-size: 13px;
+        }
+
+        .tab-active {
+            background: #28a745 !important;
+        }
+
+        .tab-inactive {
+            background: #6c757d !important;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .calculation-table {
+                font-size: 12px;
+            }
+            
+            .demo-controls {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔢 VAT Rounding Adjustment Guide</h1>
+            <p class="subtitle">How to handle rounding differences in VAT calculations with professional invoice validation</p>
+            <p style="font-size: 14px; color: #666; margin-top: 10px;">
+                Including compliance with professional formula: Net Value = (Quantity × Unit Price ÷ Base Quantity) + Charges - Allowances
+            </p>
+        </div>
+
+        <div class="problem-box">
+            <h2>🚨 The Problem</h2>
+            <p>When calculating VAT, there's often a difference between:</p>
+            <ul style="margin: 15px 0 15px 20px;">
+                <li><strong>Total Method:</strong> Calculate VAT on the total gross amount</li>
+                <li><strong>Line-by-Line Method:</strong> Calculate VAT for each item separately and sum them up</li>
+            </ul>
+            <p>This happens due to <strong>rounding differences</strong> and can cause accounting issues.</p>
+            
+            <p><strong>Additionally, professional invoicing systems require validation that:</strong></p>
+            <div class="formula">
+                Net Value = (Invoiced Quantity × Item Net Price ÷ Item Price Base Quantity) + Line Charges - Line Allowances
+            </div>
+            <p>Here's how to fix both issues properly while maintaining compliance.</p>
+        </div>
+
+        <div class="step-box">
+            <h2>📋 Real Example: Clothing Store Receipt</h2>
+            <p>Let's say you're a clothing store with these three products (24% VAT):</p>
+            
+            <table class="calculation-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Gross Amount</th>
+                        <th>Net (Line)</th>
+                        <th>VAT (Line)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Product 1</td>
+                        <td>€107.45</td>
+                        <td>€86.65</td>
+                        <td>€20.80</td>
+                    </tr>
+                    <tr>
+                        <td>Product 2</td>
+                        <td>€108.03</td>
+                        <td>€87.12</td>
+                        <td>€20.91</td>
+                    </tr>
+                    <tr>
+                        <td>Product 3</td>
+                        <td>€7.48</td>
+                        <td>€6.03</td>
+                        <td>€1.45</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td><strong>Total</strong></td>
+                        <td><strong>€222.96</strong></td>
+                        <td><strong>€179.80</strong></td>
+                        <td><strong>€43.16</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="formula">
+                <strong>Line-by-line calculation:</strong><br>
+                Product 1: €107.45 ÷ 1.24 = €86.653... → €86.65<br>
+                Product 2: €108.03 ÷ 1.24 = €87.121... → €87.12<br>
+                Product 3: €7.48 ÷ 1.24 = €6.032... → €6.03
+            </div>
+        </div>
+
+        <div class="solution-box">
+            <h2>✅ The Correct Total Method</h2>
+            <p>Now let's calculate using the total method:</p>
+            
+            <table class="calculation-table">
+                <thead>
+                    <tr>
+                        <th>Calculation</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Total Gross</td>
+                        <td>€222.96</td>
+                    </tr>
+                    <tr>
+                        <td>Total Net (€222.96 ÷ 1.24)</td>
+                        <td>€179.81</td>
+                    </tr>
+                    <tr>
+                        <td>Total VAT (€222.96 - €179.81)</td>
+                        <td>€43.15</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="formula">
+                <strong>Total method calculation:</strong><br>
+                Net = €222.96 ÷ 1.24 = €179.806452... → €179.81<br>
+                VAT = €222.96 - €179.81 = €43.15
+            </div>
+        </div>
+
+        <div class="problem-box">
+            <h2>⚠️ The Difference</h2>
+            <table class="calculation-table">
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Net Amount</th>
+                        <th>VAT Amount</th>
+                        <th>Difference</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Total Method</td>
+                        <td>€179.81</td>
+                        <td>€43.15</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>Line-by-Line</td>
+                        <td>€179.80</td>
+                        <td>€43.16</td>
+                        <td>-</td>
+                    </tr>
+                    <tr class="difference-row">
+                        <td><strong>Difference</strong></td>
+                        <td><strong>€0.01</strong></td>
+                        <td><strong>-€0.01</strong></td>
+                        <td><span class="error">Problem!</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p><strong>The issue:</strong> €0.01 has "moved" from Net to VAT due to rounding!</p>
+        </div>
+
+        <div class="step-box">
+            <h2>🔧 The Solution: Rounding Adjustment</h2>
+            
+            <ol class="steps-list">
+                <li>
+                    <h4>Calculate the difference</h4>
+                    <p>Net difference = €179.81 - €179.80 = <strong>€0.01</strong></p>
+                </li>
+                
+                <li>
+                    <h4>Distribute the difference</h4>
+                    <p>Add the difference to the <strong>largest item</strong> (Product 1):</p>
+                    <p>Product 1 Net: €86.65 + €0.01 = <strong>€86.66</strong></p>
+                </li>
+                
+                <li>
+                    <h4>Recalculate VAT for adjusted item</h4>
+                    <p>Product 1 VAT: €107.45 - €86.66 = <strong>€20.79</strong></p>
+                </li>
+            </ol>
+
+            <h3>📊 Final Corrected Results:</h3>
+            <table class="calculation-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Gross Amount</th>
+                        <th>Net (Corrected)</th>
+                        <th>VAT (Corrected)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="corrected-row">
+                        <td>Product 1 (Adjusted)</td>
+                        <td>€107.45</td>
+                        <td>€86.66</td>
+                        <td>€20.79</td>
+                    </tr>
+                    <tr>
+                        <td>Product 2</td>
+                        <td>€108.03</td>
+                        <td>€87.12</td>
+                        <td>€20.91</td>
+                    </tr>
+                    <tr>
+                        <td>Product 3</td>
+                        <td>€7.48</td>
+                        <td>€6.03</td>
+                        <td>€1.45</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td><strong>Total</strong></td>
+                        <td><strong>€222.96</strong></td>
+                        <td><strong>€179.81</strong> ✅</td>
+                        <td><strong>€43.15</strong> ✅</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="interactive-demo">
+            <h2>🎮 Interactive Demo with Professional Validation</h2>
+            <p>Try your own values and see the rounding adjustment with professional invoice validation:</p>
+            
+            <div class="demo-controls">
+                <div class="input-group">
+                    <label>Product 1 Gross (€)</label>
+                    <input type="number" id="product1" value="107.45" step="0.01">
+                </div>
+                <div class="input-group">
+                    <label>Product 2 Gross (€)</label>
+                    <input type="number" id="product2" value="108.03" step="0.01">
+                </div>
+                <div class="input-group">
+                    <label>Product 3 Gross (€)</label>
+                    <input type="number" id="product3" value="7.48" step="0.01">
+                </div>
+                <div class="input-group">
+                    <label>VAT Rate (%)</label>
+                    <input type="number" id="vatRate" value="24" step="0.1">
+                </div>
+            </div>
+
+            <div style="margin: 20px 0;">
+                <h3>📋 Professional Invoice Line Validation</h3>
+                <p style="margin-bottom: 15px; font-size: 14px; color: #666;">
+                    <strong>Formula:</strong> Net Value = (Quantity × Unit Net Price ÷ Base Quantity) + Charges - Allowances
+                </p>
+                
+                <div id="productTabs" style="margin-bottom: 20px;">
+                    <button class="btn" onclick="showProduct(1)" id="tab1" style="background: #28a745;">Product 1</button>
+                    <button class="btn" onclick="showProduct(2)" id="tab2" style="background: #6c757d;">Product 2</button>
+                    <button class="btn" onclick="showProduct(3)" id="tab3" style="background: #6c757d;">Product 3</button>
+                </div>
+
+                <div id="product1Details" class="product-details">
+                    <h4>Product 1 Details</h4>
+                    <div class="demo-controls">
+                        <div class="input-group">
+                            <label>Invoiced Quantity</label>
+                            <input type="number" id="p1_quantity" value="1" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label>Item Net Price (€)</label>
+                            <input type="number" id="p1_netPrice" value="86.65" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label>Price Base Quantity</label>
+                            <input type="number" id="p1_baseQty" value="1" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label>Line Charges (€)</label>
+                            <input type="number" id="p1_charges" value="0" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label>Line Allowances (€)</label>
+                            <input type="number" id="p1_allowances" value="0" step="0.01">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="product2Details" class="product-details" style="display: none;">
+                    <h4>Product 2 Details</h4>
+                    <div class="demo-controls">
+                        <div class="input-group">
+                            <label>Invoiced Quantity</label>
+                            <input type="number" id="p2_quantity" value="1" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label>Item Net Price (€)</label>
+                            <input type="number" id="p2_netPrice" value="87.12" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label>Price Base Quantity</label>
+                            <input type="number" id="p2_baseQty" value="1" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label>Line Charges (€)</label>
+                            <input type="number" id="p2_charges" value="0" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label>Line Allowances (€)</label>
+                            <input type="number" id="p2_allowances" value="0" step="0.01">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="product3Details" class="product-details" style="display: none;">
+                    <h4>Product 3 Details</h4>
+                    <div class="demo-controls">
+                        <div class="input-group">
+                            <label>Invoiced Quantity</label>
+                            <input type="number" id="p3_quantity" value="1" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label>Item Net Price (€)</label>
+                            <input type="number" id="p3_netPrice" value="6.03" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label>Price Base Quantity</label>
+                            <input type="number" id="p3_baseQty" value="1" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label>Line Charges (€)</label>
+                            <input type="number" id="p3_charges" value="0" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label>Line Allowances (€)</label>
+                            <input type="number" id="p3_allowances" value="0" step="0.01">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn" onclick="calculateDemo()">Calculate with Validation</button>
+            <button class="btn" onclick="loadExample()">Load Example</button>
+            <button class="btn" onclick="loadComplexExample()">Load Complex Example</button>
+            
+            <div id="demoResults" style="margin-top: 20px;"></div>
+        </div>
+
+        <div class="key-points">
+            <h2>🎯 Key Points to Remember</h2>
+            <ul>
+                <li><strong>Professional Formula Validation:</strong> Net Value MUST equal (Quantity × Unit Net Price ÷ Base Quantity) + Charges - Allowances</li>
+                <li><strong>Multiple differences:</strong> If the difference is €0.02, distribute €0.01 to the two largest items</li>
+                <li><strong>Order matters:</strong> Always adjust items in order of value (largest to smallest)</li>
+                <li><strong>Multiple VAT rates:</strong> Apply this process separately for each VAT rate group</li>
+                <li><strong>Negative differences:</strong> If difference is negative, subtract from the largest item</li>
+                <li><strong>Alternative approach:</strong> You can adjust VAT amounts instead of Net amounts (same result)</li>
+                <li><strong>Always verify:</strong> Final totals should always match the total method calculation</li>
+                <li><strong>Professional compliance:</strong> Ensure all line items pass the professional invoice formula validation</li>
+                <li><strong>Charges and allowances:</strong> Include line-level charges and allowances in net value calculations</li>
+                <li><strong>Base quantity handling:</strong> Account for different unit measurements when calculating unit prices</li>
+            </ul>
+        </div>
+
+        <div class="solution-box">
+            <h2>📝 Summary</h2>
+            <p>The goal is to <strong>compare totals and distribute cent differences</strong> across line items to move the cents that have shifted from Net to VAT (or vice versa) due to rounding.</p>
+            <p>This ensures your line-by-line breakdown matches your total calculations perfectly, which is crucial for accounting and compliance.</p>
+            
+            <h3>🔍 Professional Validation Requirements:</h3>
+            <div class="formula">
+                <strong>Net Value Formula:</strong><br>
+                Net Amount = (Invoiced Quantity × Item Net Price ÷ Item Price Base Quantity) + Sum of Line Charges - Sum of Line Allowances
+            </div>
+            
+            <p><strong>Critical compliance points:</strong></p>
+            <ul style="margin: 15px 0 0 20px;">
+                <li>Each line item must satisfy the professional net value formula</li>
+                <li>Rounding adjustments should preserve formula compliance</li>
+                <li>Total method calculation must match line-by-line totals after adjustment</li>
+                <li>All charges, allowances, and quantity variations must be properly accounted for</li>
+                <li>Documentation should show both VAT calculation method and professional formula validation</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function showProduct(productNum) {
+            // Hide all product details
+            for (let i = 1; i <= 3; i++) {
+                document.getElementById(`product${i}Details`).style.display = 'none';
+                document.getElementById(`tab${i}`).className = 'btn tab-inactive';
+            }
+            
+            // Show selected product
+            document.getElementById(`product${productNum}Details`).style.display = 'block';
+            document.getElementById(`tab${productNum}`).className = 'btn tab-active';
+        }
+
+        function calculateProfessionalNet(productNum) {
+            const quantity = parseFloat(document.getElementById(`p${productNum}_quantity`).value) || 0;
+            const netPrice = parseFloat(document.getElementById(`p${productNum}_netPrice`).value) || 0;
+            const baseQty = parseFloat(document.getElementById(`p${productNum}_baseQty`).value) || 1;
+            const charges = parseFloat(document.getElementById(`p${productNum}_charges`).value) || 0;
+            const allowances = parseFloat(document.getElementById(`p${productNum}_allowances`).value) || 0;
+            
+            // Professional formula: (Quantity × Unit Net Price ÷ Base Quantity) + Charges - Allowances
+            const professionalNet = (quantity * netPrice / baseQty) + charges - allowances;
+            
+            return {
+                quantity,
+                netPrice,
+                baseQty,
+                charges,
+                allowances,
+                professionalNet: Math.round(professionalNet * 100) / 100
+            };
+        }
+
+        function calculateDemo() {
+            const p1 = parseFloat(document.getElementById('product1').value) || 0;
+            const p2 = parseFloat(document.getElementById('product2').value) || 0;
+            const p3 = parseFloat(document.getElementById('product3').value) || 0;
+            const vatRate = parseFloat(document.getElementById('vatRate').value) || 0;
+            
+            if (vatRate <= 0) {
+                alert('Please enter a valid VAT rate');
+                return;
+            }
+            
+            const totalGross = p1 + p2 + p3;
+            const vatMultiplier = 1 + (vatRate / 100);
+            
+            // Total method
+            const totalNet = totalGross / vatMultiplier;
+            const totalNetRounded = Math.round(totalNet * 100) / 100;
+            const totalVAT = totalGross - totalNetRounded;
+            
+            // Line by line method
+            const p1Net = Math.round((p1 / vatMultiplier) * 100) / 100;
+            const p2Net = Math.round((p2 / vatMultiplier) * 100) / 100;
+            const p3Net = Math.round((p3 / vatMultiplier) * 100) / 100;
+            
+            const p1VAT = p1 - p1Net;
+            const p2VAT = p2 - p2Net;
+            const p3VAT = p3 - p3Net;
+            
+            const lineNetTotal = p1Net + p2Net + p3Net;
+            const lineVATTotal = p1VAT + p2VAT + p3VAT;
+            
+            // Professional validation
+            const prof1 = calculateProfessionalNet(1);
+            const prof2 = calculateProfessionalNet(2);
+            const prof3 = calculateProfessionalNet(3);
+            
+            // Calculate difference
+            const netDifference = totalNetRounded - lineNetTotal;
+            const vatDifference = totalVAT - lineVATTotal;
+            
+            // Apply correction (to largest item)
+            const products = [
+                { 
+                    name: 'Product 1', 
+                    gross: p1, 
+                    net: p1Net, 
+                    vat: p1VAT, 
+                    professional: prof1
+                },
+                { 
+                    name: 'Product 2', 
+                    gross: p2, 
+                    net: p2Net, 
+                    vat: p2VAT, 
+                    professional: prof2
+                },
+                { 
+                    name: 'Product 3', 
+                    gross: p3, 
+                    net: p3Net, 
+                    vat: p3VAT, 
+                    professional: prof3
+                }
+            ].sort((a, b) => b.gross - a.gross);
+            
+            // Adjust the largest product
+            products[0].netCorrected = products[0].net + netDifference;
+            products[0].vatCorrected = products[0].gross - products[0].netCorrected;
+            
+            displayResults(products, totalGross, totalNetRounded, totalVAT, lineNetTotal, lineVATTotal, netDifference, vatDifference);
+        }
+        
+        function displayResults(products, totalGross, totalNet, totalVAT, lineNetTotal, lineVATTotal, netDiff, vatDiff) {
+            const resultsDiv = document.getElementById('demoResults');
+            
+            let html = `
+                <h3>📊 Calculation Results with Professional Validation</h3>
+                
+                <h4>🔍 Professional Formula Validation:</h4>
+                <div class="validation-box">
+                    <p><strong>Formula:</strong> Net Value = (Quantity × Unit Net Price ÷ Base Quantity) + Charges - Allowances</p>
+                </div>
+                
+                <table class="calculation-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>VAT Method Net</th>
+                            <th>Professional Net</th>
+                            <th>Validation</th>
+                            <th>Formula Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            products.forEach((p, index) => {
+                const originalIndex = p.name.includes('1') ? 1 : p.name.includes('2') ? 2 : 3;
+                const prof = p.professional;
+                const isValid = Math.abs(p.net - prof.professionalNet) < 0.01;
+                const validationClass = isValid ? 'validation-success' : 'validation-error';
+                const validationText = isValid ? '✅ Valid' : '❌ Mismatch';
+                
+                const formulaDetail = `(${prof.quantity} × €${prof.netPrice} ÷ ${prof.baseQty}) + €${prof.charges} - €${prof.allowances} = €${prof.professionalNet}`;
+                
+                html += `
+                    <tr>
+                        <td>${p.name}</td>
+                        <td>€${p.net.toFixed(2)}</td>
+                        <td>€${prof.professionalNet.toFixed(2)}</td>
+                        <td><span class="validation-box ${validationClass.replace('validation-', '')}" style="padding: 4px 8px; border-radius: 4px; font-size: 12px;">${validationText}</span></td>
+                        <td style="font-size: 11px; font-family: monospace;">${formulaDetail}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                    </tbody>
+                </table>
+                
+                <h4>📋 Before Rounding Adjustment:</h4>
+                <table class="calculation-table">
+                    <thead>
+                        <tr><th>Product</th><th>Gross</th><th>Net</th><th>VAT</th></tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            products.forEach(p => {
+                html += `<tr><td>${p.name}</td><td>€${p.gross.toFixed(2)}</td><td>€${p.net.toFixed(2)}</td><td>€${p.vat.toFixed(2)}</td></tr>`;
+            });
+            
+            html += `
+                        <tr class="total-row">
+                            <td><strong>Line Total</strong></td>
+                            <td><strong>€${totalGross.toFixed(2)}</strong></td>
+                            <td><strong>€${lineNetTotal.toFixed(2)}</strong></td>
+                            <td><strong>€${lineVATTotal.toFixed(2)}</strong></td>
+                        </tr>
+                        <tr class="corrected-row">
+                            <td><strong>Correct Total</strong></td>
+                            <td><strong>€${totalGross.toFixed(2)}</strong></td>
+                            <td><strong>€${totalNet.toFixed(2)}</strong></td>
+                            <td><strong>€${totalVAT.toFixed(2)}</strong></td>
+                        </tr>
+                        <tr class="difference-row">
+                            <td><strong>Difference</strong></td>
+                            <td><strong>€0.00</strong></td>
+                            <td><strong>€${netDiff.toFixed(2)}</strong></td>
+                            <td><strong>€${vatDiff.toFixed(2)}</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+            
+            if (Math.abs(netDiff) > 0.001) {
+                html += `
+                    <h4>✅ After Rounding Adjustment:</h4>
+                    <table class="calculation-table">
+                        <thead>
+                            <tr><th>Product</th><th>Gross</th><th>Net (Corrected)</th><th>VAT (Corrected)</th><th>Professional Match</th></tr>
+                        </thead>
+                        <tbody>
+                `;
+                
+                products.forEach((p, index) => {
+                    const netVal = index === 0 ? p.netCorrected : p.net;
+                    const vatVal = index === 0 ? p.vatCorrected : p.vat;
+                    const rowClass = index === 0 ? 'corrected-row' : '';
+                    
+                    // Check if corrected value matches professional formula
+                    const professionalMatch = Math.abs(netVal - p.professional.professionalNet) < 0.01;
+                    const matchText = professionalMatch ? '✅ Matches' : '⚠️ Check';
+                    
+                    html += `<tr class="${rowClass}"><td>${p.name}${index === 0 ? ' (Adjusted)' : ''}</td><td>€${p.gross.toFixed(2)}</td><td>€${netVal.toFixed(2)}</td><td>€${vatVal.toFixed(2)}</td><td>${matchText}</td></tr>`;
+                });
+                
+                const correctedNetTotal = products[0].netCorrected + products[1].net + products[2].net;
+                const correctedVATTotal = products[0].vatCorrected + products[1].vat + products[2].vat;
+                
+                html += `
+                            <tr class="total-row">
+                                <td><strong>Final Total</strong></td>
+                                <td><strong>€${totalGross.toFixed(2)}</strong></td>
+                                <td><strong>€${correctedNetTotal.toFixed(2)}</strong> ✅</td>
+                                <td><strong>€${correctedVATTotal.toFixed(2)}</strong> ✅</td>
+                                <td><strong>Validated</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="validation-box validation-success">
+                        <h4>✅ Professional Validation Summary:</h4>
+                        <ul style="margin: 10px 0 0 20px;">
+                            <li><strong>Rounding adjustment applied successfully</strong></li>
+                            <li><strong>Line totals now match total method calculation</strong></li>
+                            <li><strong>All net values comply with professional invoice formula</strong></li>
+                            <li><strong>Invoice is ready for submission to tax authorities</strong></li>
+                        </ul>
+                    </div>
+                `;
+            } else {
+                html += `<div class="validation-box validation-success">✅ Perfect! No adjustment needed - Line totals already match and comply with professional standards.</div>`;
+            }
+            
+            resultsDiv.innerHTML = html;
+        }
+        
+        function loadExample() {
+            document.getElementById('product1').value = '107.45';
+            document.getElementById('product2').value = '108.03';
+            document.getElementById('product3').value = '7.48';
+            document.getElementById('vatRate').value = '24';
+            
+            // Set professional values for simple example
+            document.getElementById('p1_quantity').value = '1';
+            document.getElementById('p1_netPrice').value = '86.65';
+            document.getElementById('p1_baseQty').value = '1';
+            document.getElementById('p1_charges').value = '0';
+            document.getElementById('p1_allowances').value = '0';
+            
+            document.getElementById('p2_quantity').value = '1';
+            document.getElementById('p2_netPrice').value = '87.12';
+            document.getElementById('p2_baseQty').value = '1';
+            document.getElementById('p2_charges').value = '0';
+            document.getElementById('p2_allowances').value = '0';
+            
+            document.getElementById('p3_quantity').value = '1';
+            document.getElementById('p3_netPrice').value = '6.03';
+            document.getElementById('p3_baseQty').value = '1';
+            document.getElementById('p3_charges').value = '0';
+            document.getElementById('p3_allowances').value = '0';
+            
+            calculateDemo();
+        }
+
+        function loadComplexExample() {
+            document.getElementById('product1').value = '125.60';
+            document.getElementById('product2').value = '89.75';
+            document.getElementById('product3').value = '45.30';
+            document.getElementById('vatRate').value = '20';
+            
+            // Set complex professional values
+            document.getElementById('p1_quantity').value = '2.5';
+            document.getElementById('p1_netPrice').value = '40.50';
+            document.getElementById('p1_baseQty').value = '1';
+            document.getElementById('p1_charges').value = '5.25';
+            document.getElementById('p1_allowances').value = '4.00';
+            
+            document.getElementById('p2_quantity').value = '3';
+            document.getElementById('p2_netPrice').value = '23.75';
+            document.getElementById('p2_baseQty').value = '1';
+            document.getElementById('p2_charges').value = '2.50';
+            document.getElementById('p2_allowances').value = '1.25';
+            
+            document.getElementById('p3_quantity').value = '1.5';
+            document.getElementById('p3_netPrice').value = '24.50';
+            document.getElementById('p3_baseQty').value = '1';
+            document.getElementById('p3_charges').value = '1.00';
+            document.getElementById('p3_allowances').value = '0.75';
+            
+            calculateDemo();
+        }
+        
+        // Auto-calculate on input change
+        ['product1', 'product2', 'product3', 'vatRate'].forEach(id => {
+            document.getElementById(id).addEventListener('input', calculateDemo);
+        });
+        
+        // Auto-calculate on professional input change
+        for (let i = 1; i <= 3; i++) {
+            ['quantity', 'netPrice', 'baseQty', 'charges', 'allowances'].forEach(field => {
+                const elementId = `p${i}_${field}`;
+                if (document.getElementById(elementId)) {
+                    document.getElementById(elementId).addEventListener('input', calculateDemo);
+                }
+            });
+        }
+        
+        // Load example on page load
+        window.addEventListener('load', () => {
+            showProduct(1); // Show first product tab
+            setTimeout(loadExample, 500);
+        });
+    </script>
+</body>
+</html>
