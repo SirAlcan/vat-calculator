@@ -502,8 +502,8 @@
         </div>
 
         <div class="interactive-demo">
-            <h2>🎮 Interactive Demo with Professional Validation</h2>
-            <p>Try your own values and see the rounding adjustment with professional invoice validation:</p>
+            <h2>🎮 Interactive Demo with PEPPOL & MyData Validations</h2>
+            <p>Try your own values and see the rounding adjustment with PEPPOL & MyData compliance validation:</p>
             
             <div class="demo-controls">
                 <div class="input-group">
@@ -525,9 +525,9 @@
             </div>
 
             <div style="margin: 20px 0;">
-                <h3>📋 Professional Invoice Line Validation</h3>
+                <h3>📋 PEPPOL & MyData Line Validation</h3>
                 <p style="margin-bottom: 15px; font-size: 14px; color: #666;">
-                    <strong>Formula:</strong> Net Value = (Quantity × Unit Net Price ÷ Base Quantity) + Charges - Allowances
+                    <strong>Formula:</strong> Net Value = (Quantity × Unit Net Price ÷ Base Quantity) + Sum of Charges - Sum of Allowances
                 </p>
                 
                 <div id="productTabs" style="margin-bottom: 20px;">
@@ -551,13 +551,37 @@
                             <label>Price Base Quantity</label>
                             <input type="number" id="p1_baseQty" value="1" step="0.01">
                         </div>
+                    </div>
+                    
+                    <h5>Line Charges</h5>
+                    <div class="demo-controls">
                         <div class="input-group">
-                            <label>Line Charges (€)</label>
-                            <input type="number" id="p1_charges" value="0" step="0.01">
+                            <label>Line Charge 1 (€)</label>
+                            <input type="number" id="p1_charge1" value="0" step="0.01">
                         </div>
                         <div class="input-group">
-                            <label>Line Allowances (€)</label>
-                            <input type="number" id="p1_allowances" value="0" step="0.01">
+                            <label>Line Charge 2 (€)</label>
+                            <input type="number" id="p1_charge2" value="0" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label>Line Charge 3 (€)</label>
+                            <input type="number" id="p1_charge3" value="0" step="0.01">
+                        </div>
+                    </div>
+                    
+                    <h5>Line Allowances</h5>
+                    <div class="demo-controls">
+                        <div class="input-group">
+                            <label>Line Allowance 1 (€)</label>
+                            <input type="number" id="p1_allowance1" value="0" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label>Line Allowance 2 (€)</label>
+                            <input type="number" id="p1_allowance2" value="0" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label>Line Allowance 3 (€)</label>
+                            <input type="number" id="p1_allowance3" value="0" step="0.01">
                         </div>
                     </div>
                 </div>
@@ -577,13 +601,37 @@
                             <label>Price Base Quantity</label>
                             <input type="number" id="p2_baseQty" value="1" step="0.01">
                         </div>
+                    </div>
+                    
+                    <h5>Line Charges</h5>
+                    <div class="demo-controls">
                         <div class="input-group">
-                            <label>Line Charges (€)</label>
-                            <input type="number" id="p2_charges" value="0" step="0.01">
+                            <label>Line Charge 1 (€)</label>
+                            <input type="number" id="p2_charge1" value="0" step="0.01">
                         </div>
                         <div class="input-group">
-                            <label>Line Allowances (€)</label>
-                            <input type="number" id="p2_allowances" value="0" step="0.01">
+                            <label>Line Charge 2 (€)</label>
+                            <input type="number" id="p2_charge2" value="0" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label>Line Charge 3 (€)</label>
+                            <input type="number" id="p2_charge3" value="0" step="0.01">
+                        </div>
+                    </div>
+                    
+                    <h5>Line Allowances</h5>
+                    <div class="demo-controls">
+                        <div class="input-group">
+                            <label>Line Allowance 1 (€)</label>
+                            <input type="number" id="p2_allowance1" value="0" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label>Line Allowance 2 (€)</label>
+                            <input type="number" id="p2_allowance2" value="0" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label>Line Allowance 3 (€)</label>
+                            <input type="number" id="p2_allowance3" value="0" step="0.01">
                         </div>
                     </div>
                 </div>
@@ -603,20 +651,44 @@
                             <label>Price Base Quantity</label>
                             <input type="number" id="p3_baseQty" value="1" step="0.01">
                         </div>
+                    </div>
+                    
+                    <h5>Line Charges</h5>
+                    <div class="demo-controls">
                         <div class="input-group">
-                            <label>Line Charges (€)</label>
-                            <input type="number" id="p3_charges" value="0" step="0.01">
+                            <label>Line Charge 1 (€)</label>
+                            <input type="number" id="p3_charge1" value="0" step="0.01">
                         </div>
                         <div class="input-group">
-                            <label>Line Allowances (€)</label>
-                            <input type="number" id="p3_allowances" value="0" step="0.01">
+                            <label>Line Charge 2 (€)</label>
+                            <input type="number" id="p3_charge2" value="0" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label>Line Charge 3 (€)</label>
+                            <input type="number" id="p3_charge3" value="0" step="0.01">
+                        </div>
+                    </div>
+                    
+                    <h5>Line Allowances</h5>
+                    <div class="demo-controls">
+                        <div class="input-group">
+                            <label>Line Allowance 1 (€)</label>
+                            <input type="number" id="p3_allowance1" value="0" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label>Line Allowance 2 (€)</label>
+                            <input type="number" id="p3_allowance2" value="0" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label>Line Allowance 3 (€)</label>
+                            <input type="number" id="p3_allowance3" value="0" step="0.01">
                         </div>
                     </div>
                 </div>
             </div>
             
-            <button class="btn" onclick="calculateDemo()">Calculate with Validation</button>
-            <button class="btn" onclick="loadExample()">Load Example</button>
+            <button class="btn" onclick="calculateDemo()">Calculate with PEPPOL & MyData Validation</button>
+            <button class="btn" onclick="loadExample()">Load Simple Example</button>
             <button class="btn" onclick="loadComplexExample()">Load Complex Example</button>
             
             <div id="demoResults" style="margin-top: 20px;"></div>
@@ -625,15 +697,16 @@
         <div class="key-points">
             <h2>🎯 Key Points to Remember</h2>
             <ul>
-                <li><strong>Professional Formula Validation:</strong> Net Value MUST equal (Quantity × Unit Net Price ÷ Base Quantity) + Charges - Allowances</li>
+                <li><strong>PEPPOL & MyData Formula Validation:</strong> Net Value MUST equal (Quantity × Unit Net Price ÷ Base Quantity) + Sum of Charges - Sum of Allowances</li>
+                <li><strong>Multiple charges/allowances:</strong> Support for up to 3 line charges and 3 line allowances per item</li>
                 <li><strong>Multiple differences:</strong> If the difference is €0.02, distribute €0.01 to the two largest items</li>
                 <li><strong>Order matters:</strong> Always adjust items in order of value (largest to smallest)</li>
                 <li><strong>Multiple VAT rates:</strong> Apply this process separately for each VAT rate group</li>
                 <li><strong>Negative differences:</strong> If difference is negative, subtract from the largest item</li>
                 <li><strong>Alternative approach:</strong> You can adjust VAT amounts instead of Net amounts (same result)</li>
                 <li><strong>Always verify:</strong> Final totals should always match the total method calculation</li>
-                <li><strong>Professional compliance:</strong> Ensure all line items pass the professional invoice formula validation</li>
-                <li><strong>Charges and allowances:</strong> Include line-level charges and allowances in net value calculations</li>
+                <li><strong>PEPPOL & MyData compliance:</strong> Ensure all line items pass the formula validation</li>
+                <li><strong>Charges and allowances:</strong> Include all line-level charges and allowances in net value calculations</li>
                 <li><strong>Base quantity handling:</strong> Account for different unit measurements when calculating unit prices</li>
             </ul>
         </div>
@@ -643,7 +716,7 @@
             <p>The goal is to <strong>compare totals and distribute cent differences</strong> across line items to move the cents that have shifted from Net to VAT (or vice versa) due to rounding.</p>
             <p>This ensures your line-by-line breakdown matches your total calculations perfectly, which is crucial for accounting and compliance.</p>
             
-            <h3>🔍 Professional Validation Requirements:</h3>
+            <h3>🔍 PEPPOL & MyData Validation Requirements:</h3>
             <div class="formula">
                 <strong>Net Value Formula:</strong><br>
                 Net Amount = (Invoiced Quantity × Item Net Price ÷ Item Price Base Quantity) + Sum of Line Charges - Sum of Line Allowances
@@ -651,11 +724,12 @@
             
             <p><strong>Critical compliance points:</strong></p>
             <ul style="margin: 15px 0 0 20px;">
-                <li>Each line item must satisfy the professional net value formula</li>
+                <li>Each line item must satisfy the PEPPOL & MyData net value formula</li>
+                <li>Support for multiple charges and allowances per line (up to 3 each)</li>
                 <li>Rounding adjustments should preserve formula compliance</li>
                 <li>Total method calculation must match line-by-line totals after adjustment</li>
                 <li>All charges, allowances, and quantity variations must be properly accounted for</li>
-                <li>Documentation should show both VAT calculation method and professional formula validation</li>
+                <li>Documentation should show both VAT calculation method and PEPPOL/MyData formula validation</li>
             </ul>
         </div>
     </div>
@@ -677,18 +751,30 @@
             const quantity = parseFloat(document.getElementById(`p${productNum}_quantity`).value) || 0;
             const netPrice = parseFloat(document.getElementById(`p${productNum}_netPrice`).value) || 0;
             const baseQty = parseFloat(document.getElementById(`p${productNum}_baseQty`).value) || 1;
-            const charges = parseFloat(document.getElementById(`p${productNum}_charges`).value) || 0;
-            const allowances = parseFloat(document.getElementById(`p${productNum}_allowances`).value) || 0;
             
-            // Professional formula: (Quantity × Unit Net Price ÷ Base Quantity) + Charges - Allowances
-            const professionalNet = (quantity * netPrice / baseQty) + charges - allowances;
+            // Sum of all charges
+            const charge1 = parseFloat(document.getElementById(`p${productNum}_charge1`).value) || 0;
+            const charge2 = parseFloat(document.getElementById(`p${productNum}_charge2`).value) || 0;
+            const charge3 = parseFloat(document.getElementById(`p${productNum}_charge3`).value) || 0;
+            const totalCharges = charge1 + charge2 + charge3;
+            
+            // Sum of all allowances
+            const allowance1 = parseFloat(document.getElementById(`p${productNum}_allowance1`).value) || 0;
+            const allowance2 = parseFloat(document.getElementById(`p${productNum}_allowance2`).value) || 0;
+            const allowance3 = parseFloat(document.getElementById(`p${productNum}_allowance3`).value) || 0;
+            const totalAllowances = allowance1 + allowance2 + allowance3;
+            
+            // PEPPOL & MyData formula: (Quantity × Unit Net Price ÷ Base Quantity) + Sum of Charges - Sum of Allowances
+            const professionalNet = (quantity * netPrice / baseQty) + totalCharges - totalAllowances;
             
             return {
                 quantity,
                 netPrice,
                 baseQty,
-                charges,
-                allowances,
+                charges: [charge1, charge2, charge3],
+                allowances: [allowance1, allowance2, allowance3],
+                totalCharges,
+                totalAllowances,
                 professionalNet: Math.round(professionalNet * 100) / 100
             };
         }
@@ -769,11 +855,11 @@
             const resultsDiv = document.getElementById('demoResults');
             
             let html = `
-                <h3>📊 Calculation Results with Professional Validation</h3>
+                <h3>📊 Calculation Results with PEPPOL & MyData Validation</h3>
                 
-                <h4>🔍 Professional Formula Validation:</h4>
+                <h4>🔍 PEPPOL & MyData Formula Validation:</h4>
                 <div class="validation-box">
-                    <p><strong>Formula:</strong> Net Value = (Quantity × Unit Net Price ÷ Base Quantity) + Charges - Allowances</p>
+                    <p><strong>Formula:</strong> Net Value = (Quantity × Unit Net Price ÷ Base Quantity) + Sum of Charges - Sum of Allowances</p>
                 </div>
                 
                 <table class="calculation-table">
@@ -781,7 +867,7 @@
                         <tr>
                             <th>Product</th>
                             <th>VAT Method Net</th>
-                            <th>Professional Net</th>
+                            <th>PEPPOL/MyData Net</th>
                             <th>Validation</th>
                             <th>Formula Details</th>
                         </tr>
@@ -796,7 +882,12 @@
                 const validationClass = isValid ? 'validation-success' : 'validation-error';
                 const validationText = isValid ? '✅ Valid' : '❌ Mismatch';
                 
-                const formulaDetail = `(${prof.quantity} × €${prof.netPrice} ÷ ${prof.baseQty}) + €${prof.charges} - €${prof.allowances} = €${prof.professionalNet}`;
+                const chargesDetail = prof.charges.filter(c => c > 0).length > 0 ? 
+                    `+ (${prof.charges.filter(c => c > 0).map(c => `€${c.toFixed(2)}`).join(' + ')})` : '';
+                const allowancesDetail = prof.allowances.filter(a => a > 0).length > 0 ? 
+                    `- (${prof.allowances.filter(a => a > 0).map(a => `€${a.toFixed(2)}`).join(' + ')})` : '';
+                
+                const formulaDetail = `(${prof.quantity} × €${prof.netPrice} ÷ ${prof.baseQty}) ${chargesDetail} ${allowancesDetail} = €${prof.professionalNet}`;
                 
                 html += `
                     <tr>
@@ -853,7 +944,7 @@
                     <h4>✅ After Rounding Adjustment:</h4>
                     <table class="calculation-table">
                         <thead>
-                            <tr><th>Product</th><th>Gross</th><th>Net (Corrected)</th><th>VAT (Corrected)</th><th>Professional Match</th></tr>
+                            <tr><th>Product</th><th>Gross</th><th>Net (Corrected)</th><th>VAT (Corrected)</th><th>PEPPOL/MyData Match</th></tr>
                         </thead>
                         <tbody>
                 `;
@@ -885,17 +976,18 @@
                     </table>
                     
                     <div class="validation-box validation-success">
-                        <h4>✅ Professional Validation Summary:</h4>
+                        <h4>✅ PEPPOL & MyData Validation Summary:</h4>
                         <ul style="margin: 10px 0 0 20px;">
                             <li><strong>Rounding adjustment applied successfully</strong></li>
                             <li><strong>Line totals now match total method calculation</strong></li>
-                            <li><strong>All net values comply with professional invoice formula</strong></li>
+                            <li><strong>All net values comply with PEPPOL & MyData formula</strong></li>
+                            <li><strong>Multiple charges and allowances properly processed</strong></li>
                             <li><strong>Invoice is ready for submission to tax authorities</strong></li>
                         </ul>
                     </div>
                 `;
             } else {
-                html += `<div class="validation-box validation-success">✅ Perfect! No adjustment needed - Line totals already match and comply with professional standards.</div>`;
+                html += `<div class="validation-box validation-success">✅ Perfect! No adjustment needed - Line totals already match and comply with PEPPOL & MyData standards.</div>`;
             }
             
             resultsDiv.innerHTML = html;
@@ -907,24 +999,39 @@
             document.getElementById('product3').value = '7.48';
             document.getElementById('vatRate').value = '24';
             
-            // Set professional values for simple example
+            // Set PEPPOL & MyData values for simple example
+            // Product 1
             document.getElementById('p1_quantity').value = '1';
             document.getElementById('p1_netPrice').value = '86.65';
             document.getElementById('p1_baseQty').value = '1';
-            document.getElementById('p1_charges').value = '0';
-            document.getElementById('p1_allowances').value = '0';
+            document.getElementById('p1_charge1').value = '0';
+            document.getElementById('p1_charge2').value = '0';
+            document.getElementById('p1_charge3').value = '0';
+            document.getElementById('p1_allowance1').value = '0';
+            document.getElementById('p1_allowance2').value = '0';
+            document.getElementById('p1_allowance3').value = '0';
             
+            // Product 2
             document.getElementById('p2_quantity').value = '1';
             document.getElementById('p2_netPrice').value = '87.12';
             document.getElementById('p2_baseQty').value = '1';
-            document.getElementById('p2_charges').value = '0';
-            document.getElementById('p2_allowances').value = '0';
+            document.getElementById('p2_charge1').value = '0';
+            document.getElementById('p2_charge2').value = '0';
+            document.getElementById('p2_charge3').value = '0';
+            document.getElementById('p2_allowance1').value = '0';
+            document.getElementById('p2_allowance2').value = '0';
+            document.getElementById('p2_allowance3').value = '0';
             
+            // Product 3
             document.getElementById('p3_quantity').value = '1';
             document.getElementById('p3_netPrice').value = '6.03';
             document.getElementById('p3_baseQty').value = '1';
-            document.getElementById('p3_charges').value = '0';
-            document.getElementById('p3_allowances').value = '0';
+            document.getElementById('p3_charge1').value = '0';
+            document.getElementById('p3_charge2').value = '0';
+            document.getElementById('p3_charge3').value = '0';
+            document.getElementById('p3_allowance1').value = '0';
+            document.getElementById('p3_allowance2').value = '0';
+            document.getElementById('p3_allowance3').value = '0';
             
             calculateDemo();
         }
@@ -935,24 +1042,39 @@
             document.getElementById('product3').value = '45.30';
             document.getElementById('vatRate').value = '20';
             
-            // Set complex professional values
+            // Set complex PEPPOL & MyData values with multiple charges and allowances
+            // Product 1 - Complex scenario with multiple charges and allowances
             document.getElementById('p1_quantity').value = '2.5';
-            document.getElementById('p1_netPrice').value = '40.50';
+            document.getElementById('p1_netPrice').value = '38.50';
             document.getElementById('p1_baseQty').value = '1';
-            document.getElementById('p1_charges').value = '5.25';
-            document.getElementById('p1_allowances').value = '4.00';
+            document.getElementById('p1_charge1').value = '5.25';  // Delivery charge
+            document.getElementById('p1_charge2').value = '3.50';  // Handling fee
+            document.getElementById('p1_charge3').value = '1.75';  // Insurance
+            document.getElementById('p1_allowance1').value = '4.00'; // Volume discount
+            document.getElementById('p1_allowance2').value = '2.50'; // Early payment discount
+            document.getElementById('p1_allowance3').value = '0.50'; // Loyalty discount
             
+            // Product 2 - Moderate complexity
             document.getElementById('p2_quantity').value = '3';
-            document.getElementById('p2_netPrice').value = '23.75';
+            document.getElementById('p2_netPrice').value = '22.50';
             document.getElementById('p2_baseQty').value = '1';
-            document.getElementById('p2_charges').value = '2.50';
-            document.getElementById('p2_allowances').value = '1.25';
+            document.getElementById('p2_charge1').value = '2.50';
+            document.getElementById('p2_charge2').value = '1.25';
+            document.getElementById('p2_charge3').value = '0';
+            document.getElementById('p2_allowance1').value = '1.25';
+            document.getElementById('p2_allowance2').value = '0.75';
+            document.getElementById('p2_allowance3').value = '0';
             
+            // Product 3 - Simple with few adjustments
             document.getElementById('p3_quantity').value = '1.5';
-            document.getElementById('p3_netPrice').value = '24.50';
+            document.getElementById('p3_netPrice').value = '25.00';
             document.getElementById('p3_baseQty').value = '1';
-            document.getElementById('p3_charges').value = '1.00';
-            document.getElementById('p3_allowances').value = '0.75';
+            document.getElementById('p3_charge1').value = '1.50';
+            document.getElementById('p3_charge2').value = '0';
+            document.getElementById('p3_charge3').value = '0';
+            document.getElementById('p3_allowance1').value = '1.00';
+            document.getElementById('p3_allowance2').value = '0';
+            document.getElementById('p3_allowance3').value = '0';
             
             calculateDemo();
         }
@@ -962,9 +1084,9 @@
             document.getElementById(id).addEventListener('input', calculateDemo);
         });
         
-        // Auto-calculate on professional input change
+        // Auto-calculate on PEPPOL & MyData input change
         for (let i = 1; i <= 3; i++) {
-            ['quantity', 'netPrice', 'baseQty', 'charges', 'allowances'].forEach(field => {
+            ['quantity', 'netPrice', 'baseQty', 'charge1', 'charge2', 'charge3', 'allowance1', 'allowance2', 'allowance3'].forEach(field => {
                 const elementId = `p${i}_${field}`;
                 if (document.getElementById(elementId)) {
                     document.getElementById(elementId).addEventListener('input', calculateDemo);
