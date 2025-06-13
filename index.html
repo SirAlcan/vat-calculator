@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Αποφορολόγηση - Υπολογιστής ΦΠΑ</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .example-box {
+            background: #f8f9fa;
+            border-left: 5px solid #007bff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .calculator {
+            background: #e3f2fd;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+            border: 2px solid #2196f3;
+        }
+        .input-group {
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .input-group label {
+            font-weight: bold;
+            min-width: 120px;
+            color: #34495e;
+        }
+        .input-group input {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #bdc3c7;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .input-group input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        .result-box {
+            background: #d4edda;
+            border: 2px solid #27ae60;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        .result-item.total {
+            font-weight: bold;
+            font-size: 20px;
+            border-top: 2px solid #27ae60;
+            padding-top: 10px;
+            color: #27ae60;
+        }
+        .formula {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        .btn:hover {
+            background: #2980b9;
+        }
+        .your-example {
+            background: #ffe6e6;
+            border-left: 5px solid #e74c3c;
+        }
+        .our-data {
+            background: #e6ffe6;
+            border-left: 5px solid #27ae60;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧮 Αποφορολόγηση ΦΠΑ</h1>
+            <p>Υπολογισμός Net Value από Gross Value με 24% ΦΠΑ</p>
+        </div>
+
+        <div class="example-box your-example">
+            <h3>📊 Το Παράδειγμά σου: 2977.02€</h3>
+            <div class="formula">
+                <strong>Τύπος αποφορολόγησης:</strong><br>
+                Net Value = Gross Value ÷ (1 + VAT Rate)<br>
+                Net Value = 2977.02€ ÷ 1.24 = <strong>2400.82€</strong><br>
+                VAT Amount = 2977.02€ - 2400.82€ = <strong>576.20€</strong>
+            </div>
+            <div class="result-box">
+                <div class="result-item">
+                    <span>Gross Value (με ΦΠΑ):</span>
+                    <span><strong>2977.02€</strong></span>
+                </div>
+                <div class="result-item">
+                    <span>Net Value (χωρίς ΦΠΑ):</span>
+                    <span><strong>2400.82€</strong></span>
+                </div>
+                <div class="result-item total">
+                    <span>VAT Amount (24%):</span>
+                    <span><strong>576.20€</strong></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="example-box our-data">
+            <h3>✅ Τα Διορθωμένα Δεδομένα μας: 2978.33€</h3>
+            <div class="formula">
+                <strong>Έλεγχος ορθότητας:</strong><br>
+                Net Value = 2978.33€ ÷ 1.24 = <strong>2401.88€</strong> ✅<br>
+                VAT Amount = 2978.33€ - 2401.88€ = <strong>576.45€</strong> ✅<br>
+                <span style="color: #27ae60;">Τα νούμερά μας είναι απόλυτα σωστά!</span>
+            </div>
+        </div>
+
+        <div class="calculator">
+            <h3>🔧 Διαδραστικός Υπολογιστής</h3>
+            <div class="input-group">
+                <label>Gross Value (€):</label>
+                <input type="number" id="grossInput" placeholder="π.χ. 2977.02" step="0.01">
+            </div>
+            <div class="input-group">
+                <label>VAT Rate (%):</label>
+                <input type="number" id="vatRateInput" value="24" step="0.1">
+            </div>
+            <button class="btn" onclick="calculate()">Υπολογισμός Αποφορολόγησης</button>
+            <button class="btn" onclick="loadExamples()">Φόρτωση Παραδειγμάτων</button>
+            
+            <div id="calculatorResult" class="result-box" style="display: none;">
+                <div class="result-item">
+                    <span>Gross Value:</span>
+                    <span id="resultGross">-</span>
+                </div>
+                <div class="result-item">
+                    <span>Net Value:</span>
+                    <span id="resultNet">-</span>
+                </div>
+                <div class="result-item total">
+                    <span>VAT Amount:</span>
+                    <span id="resultVAT">-</span>
+                </div>
+                <div style="margin-top: 15px; font-size: 14px; color: #666;">
+                    <strong>Τύπος:</strong> Net = Gross ÷ (1 + VAT/100)
+                </div>
+            </div>
+        </div>
+
+        <div class="example-box">
+            <h3>📚 Χρήσιμες Πληροφορίες</h3>
+            <ul>
+                <li><strong>Gross Value:</strong> Το ποσό που περιλαμβάνει το ΦΠΑ (τελική τιμή)</li>
+                <li><strong>Net Value:</strong> Το ποσό χωρίς ΦΠΑ (αξία προ φόρων)</li>
+                <li><strong>VAT Amount:</strong> Το ποσό του ΦΠΑ</li>
+                <li><strong>Ελληνικό ΦΠΑ:</strong> 24% για τα περισσότερα προϊόντα</li>
+                <li><strong>Στρογγυλοποίηση:</strong> Οι διαφορές οφείλονται σε στρογγυλοποιήσεις</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            const gross = parseFloat(document.getElementById('grossInput').value);
+            const vatRate = parseFloat(document.getElementById('vatRateInput').value);
+            
+            if (isNaN(gross) || isNaN(vatRate)) {
+                alert('Παρακαλώ εισάγετε έγκυρους αριθμούς');
+                return;
+            }
+            
+            const net = gross / (1 + vatRate / 100);
+            const vat = gross - net;
+            
+            document.getElementById('resultGross').textContent = gross.toFixed(2) + '€';
+            document.getElementById('resultNet').textContent = net.toFixed(2) + '€';
+            document.getElementById('resultVAT').textContent = vat.toFixed(2) + '€';
+            
+            document.getElementById('calculatorResult').style.display = 'block';
+        }
+        
+        function loadExamples() {
+            const examples = [
+                { gross: 2977.02, vat: 24 },
+                { gross: 2978.33, vat: 24 },
+                { gross: 1000, vat: 24 },
+                { gross: 124, vat: 24 }
+            ];
+            
+            const randomExample = examples[Math.floor(Math.random() * examples.length)];
+            document.getElementById('grossInput').value = randomExample.gross;
+            document.getElementById('vatRateInput').value = randomExample.vat;
+            calculate();
+        }
+        
+        // Auto-calculate on input change
+        document.getElementById('grossInput').addEventListener('input', function() {
+            if (this.value) calculate();
+        });
+        
+        document.getElementById('vatRateInput').addEventListener('input', function() {
+            if (document.getElementById('grossInput').value) calculate();
+        });
+    </script>
+</body>
+</html>
