@@ -544,14 +544,15 @@
                             <input type="number" id="p1_quantity" value="1" step="0.01">
                         </div>
                         <div class="input-group">
-                            <label>Item Net Price (€)</label>
-                            <input type="number" id="p1_netPrice" value="86.65" step="0.01">
+                            <label>Item Net Price (€) - Auto-calculated</label>
+                            <input type="number" id="p1_netPrice" value="86.65" step="0.01" style="background-color: #e9ecef;">
                         </div>
                         <div class="input-group">
                             <label>Price Base Quantity</label>
                             <input type="number" id="p1_baseQty" value="1" step="0.01">
                         </div>
                     </div>
+                    <div id="p1_calculation_info"></div>
                     
                     <h5>Line Charges</h5>
                     <div class="demo-controls">
@@ -594,14 +595,15 @@
                             <input type="number" id="p2_quantity" value="1" step="0.01">
                         </div>
                         <div class="input-group">
-                            <label>Item Net Price (€)</label>
-                            <input type="number" id="p2_netPrice" value="87.12" step="0.01">
+                            <label>Item Net Price (€) - Auto-calculated</label>
+                            <input type="number" id="p2_netPrice" value="87.12" step="0.01" style="background-color: #e9ecef;">
                         </div>
                         <div class="input-group">
                             <label>Price Base Quantity</label>
                             <input type="number" id="p2_baseQty" value="1" step="0.01">
                         </div>
                     </div>
+                    <div id="p2_calculation_info"></div>
                     
                     <h5>Line Charges</h5>
                     <div class="demo-controls">
@@ -644,14 +646,15 @@
                             <input type="number" id="p3_quantity" value="1" step="0.01">
                         </div>
                         <div class="input-group">
-                            <label>Item Net Price (€)</label>
-                            <input type="number" id="p3_netPrice" value="6.03" step="0.01">
+                            <label>Item Net Price (€) - Auto-calculated</label>
+                            <input type="number" id="p3_netPrice" value="6.03" step="0.01" style="background-color: #e9ecef;">
                         </div>
                         <div class="input-group">
                             <label>Price Base Quantity</label>
                             <input type="number" id="p3_baseQty" value="1" step="0.01">
                         </div>
                     </div>
+                    <div id="p3_calculation_info"></div>
                     
                     <h5>Line Charges</h5>
                     <div class="demo-controls">
@@ -690,6 +693,7 @@
             <button class="btn" onclick="calculateDemo()">Calculate with PEPPOL & MyData Validation</button>
             <button class="btn" onclick="loadExample()">Load Simple Example</button>
             <button class="btn" onclick="loadComplexExample()">Load Complex Example</button>
+            <button class="btn" onclick="toggleAutoCalculation()" id="autoCalcToggle" style="background: #28a745;">🔄 Auto-Calc ON</button>
             
             <div id="demoResults" style="margin-top: 20px;"></div>
         </div>
@@ -777,6 +781,82 @@
                 totalAllowances,
                 professionalNet: Math.round(professionalNet * 100) / 100
             };
+        }
+
+        let autoCalculationEnabled = true;
+
+        function toggleAutoCalculation() {
+            autoCalculationEnabled = !autoCalculationEnabled;
+            const button = document.getElementById('autoCalcToggle');
+            const netPriceFields = document.querySelectorAll('input[id$="_netPrice"]');
+            
+            if (autoCalculationEnabled) {
+                button.textContent = '🔄 Auto-Calc ON';
+                button.style.background = '#28a745';
+                netPriceFields.forEach(field => {
+                    field.style.backgroundColor = '#e9ecef';
+                    field.disabled = false;
+                });
+                // Recalculate all unit prices
+                for (let i = 1; i <= 3; i++) {
+                    autoCalculateUnitPrice(i);
+                }
+            } else {
+                button.textContent = '✋ Auto-Calc OFF';
+                button.style.background = '#dc3545';
+                netPriceFields.forEach(field => {
+                    field.style.backgroundColor = '#ffffff';
+                    field.disabled = false;
+                });
+            }
+            calculateDemo();
+        }
+
+        function autoCalculateUnitPrice(productNum) {
+            if (!autoCalculationEnabled) return;
+
+            const grossAmount = parseFloat(document.getElementById(`product${productNum}`).value) || 0;
+            const vatRate = parseFloat(document.getElementById('vatRate').value) || 0;
+            const quantity = parseFloat(document.getElementById(`p${productNum}_quantity`).value) || 1;
+            const baseQty = parseFloat(document.getElementById(`p${productNum}_baseQty`).value) || 1;
+            
+            // Sum of all charges
+            const charge1 = parseFloat(document.getElementById(`p${productNum}_charge1`).value) || 0;
+            const charge2 = parseFloat(document.getElementById(`p${productNum}_charge2`).value) || 0;
+            const charge3 = parseFloat(document.getElementById(`p${productNum}_charge3`).value) || 0;
+            const totalCharges = charge1 + charge2 + charge3;
+            
+            // Sum of all allowances
+            const allowance1 = parseFloat(document.getElementById(`p${productNum}_allowance1`).value) || 0;
+            const allowance2 = parseFloat(document.getElementById(`p${productNum}_allowance2`).value) || 0;
+            const allowance3 = parseFloat(document.getElementById(`p${productNum}_allowance3`).value) || 0;
+            const totalAllowances = allowance1 + allowance2 + allowance3;
+            
+            if (grossAmount > 0 && vatRate > 0 && quantity > 0) {
+                // Calculate net amount from gross
+                const vatMultiplier = 1 + (vatRate / 100);
+                const netAmount = grossAmount / vatMultiplier;
+                
+                // Calculate Unit Net Price using reverse PEPPOL formula:
+                // Net Amount = (Quantity × Unit Net Price ÷ Base Quantity) + Charges - Allowances
+                // Therefore: Unit Net Price = (Net Amount - Charges + Allowances) × Base Quantity ÷ Quantity
+                const unitNetPrice = (netAmount - totalCharges + totalAllowances) * baseQty / quantity;
+                
+                // Update the field with calculated value
+                document.getElementById(`p${productNum}_netPrice`).value = Math.round(unitNetPrice * 100) / 100;
+                
+                // Show calculation info
+                const calculationInfo = document.getElementById(`p${productNum}_calculation_info`);
+                if (calculationInfo) {
+                    calculationInfo.innerHTML = `
+                        <div style="font-size: 12px; color: #666; margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 4px;">
+                            <strong>Auto-calculated:</strong><br>
+                            Net Amount: €${grossAmount} ÷ ${vatMultiplier} = €${netAmount.toFixed(2)}<br>
+                            Unit Net Price: (€${netAmount.toFixed(2)} - €${totalCharges.toFixed(2)} + €${totalAllowances.toFixed(2)}) × ${baseQty} ÷ ${quantity} = €${unitNetPrice.toFixed(2)}
+                        </div>
+                    `;
+                }
+            }
         }
 
         function calculateDemo() {
@@ -1002,7 +1082,6 @@
             // Set PEPPOL & MyData values for simple example
             // Product 1
             document.getElementById('p1_quantity').value = '1';
-            document.getElementById('p1_netPrice').value = '86.65';
             document.getElementById('p1_baseQty').value = '1';
             document.getElementById('p1_charge1').value = '0';
             document.getElementById('p1_charge2').value = '0';
@@ -1013,7 +1092,6 @@
             
             // Product 2
             document.getElementById('p2_quantity').value = '1';
-            document.getElementById('p2_netPrice').value = '87.12';
             document.getElementById('p2_baseQty').value = '1';
             document.getElementById('p2_charge1').value = '0';
             document.getElementById('p2_charge2').value = '0';
@@ -1024,7 +1102,6 @@
             
             // Product 3
             document.getElementById('p3_quantity').value = '1';
-            document.getElementById('p3_netPrice').value = '6.03';
             document.getElementById('p3_baseQty').value = '1';
             document.getElementById('p3_charge1').value = '0';
             document.getElementById('p3_charge2').value = '0';
@@ -1032,6 +1109,11 @@
             document.getElementById('p3_allowance1').value = '0';
             document.getElementById('p3_allowance2').value = '0';
             document.getElementById('p3_allowance3').value = '0';
+            
+            // Auto-calculate unit prices for all products
+            for (let i = 1; i <= 3; i++) {
+                autoCalculateUnitPrice(i);
+            }
             
             calculateDemo();
         }
@@ -1045,7 +1127,6 @@
             // Set complex PEPPOL & MyData values with multiple charges and allowances
             // Product 1 - Complex scenario with multiple charges and allowances
             document.getElementById('p1_quantity').value = '2.5';
-            document.getElementById('p1_netPrice').value = '38.50';
             document.getElementById('p1_baseQty').value = '1';
             document.getElementById('p1_charge1').value = '5.25';  // Delivery charge
             document.getElementById('p1_charge2').value = '3.50';  // Handling fee
@@ -1056,7 +1137,6 @@
             
             // Product 2 - Moderate complexity
             document.getElementById('p2_quantity').value = '3';
-            document.getElementById('p2_netPrice').value = '22.50';
             document.getElementById('p2_baseQty').value = '1';
             document.getElementById('p2_charge1').value = '2.50';
             document.getElementById('p2_charge2').value = '1.25';
@@ -1067,7 +1147,6 @@
             
             // Product 3 - Simple with few adjustments
             document.getElementById('p3_quantity').value = '1.5';
-            document.getElementById('p3_netPrice').value = '25.00';
             document.getElementById('p3_baseQty').value = '1';
             document.getElementById('p3_charge1').value = '1.50';
             document.getElementById('p3_charge2').value = '0';
@@ -1076,12 +1155,23 @@
             document.getElementById('p3_allowance2').value = '0';
             document.getElementById('p3_allowance3').value = '0';
             
+            // Auto-calculate unit prices for all products
+            for (let i = 1; i <= 3; i++) {
+                autoCalculateUnitPrice(i);
+            }
+            
             calculateDemo();
         }
         
         // Auto-calculate on input change
         ['product1', 'product2', 'product3', 'vatRate'].forEach(id => {
-            document.getElementById(id).addEventListener('input', calculateDemo);
+            document.getElementById(id).addEventListener('input', () => {
+                if (id.startsWith('product')) {
+                    const productNum = id.replace('product', '');
+                    autoCalculateUnitPrice(productNum);
+                }
+                calculateDemo();
+            });
         });
         
         // Auto-calculate on PEPPOL & MyData input change
@@ -1089,15 +1179,36 @@
             ['quantity', 'netPrice', 'baseQty', 'charge1', 'charge2', 'charge3', 'allowance1', 'allowance2', 'allowance3'].forEach(field => {
                 const elementId = `p${i}_${field}`;
                 if (document.getElementById(elementId)) {
-                    document.getElementById(elementId).addEventListener('input', calculateDemo);
+                    document.getElementById(elementId).addEventListener('input', () => {
+                        // Auto-calculate unit price when relevant fields change (but not when netPrice itself changes)
+                        if (field !== 'netPrice') {
+                            autoCalculateUnitPrice(i);
+                        }
+                        calculateDemo();
+                    });
                 }
             });
         }
         
+        // Also add VAT rate change listener for unit price auto-calculation
+        document.getElementById('vatRate').addEventListener('input', () => {
+            for (let i = 1; i <= 3; i++) {
+                autoCalculateUnitPrice(i);
+            }
+            calculateDemo();
+        });
+        
         // Load example on page load
         window.addEventListener('load', () => {
             showProduct(1); // Show first product tab
-            setTimeout(loadExample, 500);
+            setTimeout(() => {
+                loadExample();
+                // Auto-calculate unit prices for all products
+                for (let i = 1; i <= 3; i++) {
+                    autoCalculateUnitPrice(i);
+                }
+                calculateDemo();
+            }, 500);
         });
     </script>
 </body>
